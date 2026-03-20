@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Music: 인공지능 기초 수업</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .music-note {
+            position: absolute;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(15deg); }
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .instrument-pad {
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .instrument-pad:active {
+            transform: scale(0.95);
+            filter: brightness(1.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-slate-100">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-compact-disc text-indigo-600 dark:text-indigo-400 animate-spin-slow"></i>
+                <span class="font-bold text-xl tracking-tight">AI Music Lab</span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium">
+                    <a href="#intro" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">수업소개</a>
+                    <a href="#interactive" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition text-indigo-600 font-bold">인터랙티브 체험</a>
+                    <a href="#ethics" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">AI 윤리</a>
+                </div>
+                
+                <button id="theme-toggle" class="p-2 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-yellow-400 hover:ring-2 hover:ring-indigo-500 transition-all">
+                    <i id="theme-toggle-dark-icon" class="hidden fas fa-moon"></i>
+                    <i id="theme-toggle-light-icon" class="hidden fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="intro" class="relative overflow-hidden gradient-bg text-white pt-32 pb-24 px-6">
+        <i class="fas fa-music music-note text-8xl top-20 left-10"></i>
+        <i class="fas fa-robot music-note text-8xl bottom-20 right-10" style="animation-delay: 2s;"></i>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="bg-white/20 dark:bg-black/20 backdrop-blur-md px-4 py-1 rounded-full text-sm font-medium mb-6 inline-block border border-white/30">
+                🎵 2024학년도 중학교 음악 & 인공지능 융합 수업
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 leading-tight">
+                AI와 함께 연주하는<br><span class="text-indigo-200 text-shadow-lg">디지털 하모니</span>
+            </h1>
+            <p class="text-xl text-indigo-50/80 mb-10 leading-relaxed max-w-2xl mx-auto">
+                아래 인터랙티브 패드를 눌러 소리를 만들어보세요. <br>여러분이 만드는 데이터가 AI 학습의 기초가 됩니다.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#interactive" class="bg-white text-indigo-600 dark:bg-indigo-500 dark:text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-lg">
+                    <i class="fas fa-play-circle mr-2"></i>연주 시작하기
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Section -->
+    <section id="interactive" class="max-w-6xl mx-auto px-6 py-20 scroll-mt-24">
+        <div class="text-center mb-12">
+            <span class="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold text-sm mb-4">Hands-on Experience</span>
+            <h2 class="text-4xl font-bold mb-4">인터랙티브 사운드 체험</h2>
+            <p class="text-gray-500 dark:text-slate-400">패드를 클릭하여 AI에게 전달할 '데이터(선율)'를 생성해보세요.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Sound Visualizer -->
+            <div class="space-y-6">
+                <div id="canvas-container" class="shadow-2xl ring-4 ring-indigo-500/20">
+                    <canvas id="visualizer"></canvas>
+                    <div id="start-hint" class="absolute inset-0 flex items-center justify-center text-white/50 text-sm bg-black/40 backdrop-blur-sm">
+                        패드를 눌러 소리를 재생하면 시각화가 시작됩니다.
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm font-medium">
+                    <span class="text-indigo-500 flex items-center gap-2"><i class="fas fa-wave-square animate-pulse"></i> 실시간 파형 분석</span>
+                    <button onclick="resetVisuals()" class="text-gray-400 hover:text-indigo-500 transition"><i class="fas fa-redo mr-1"></i> 초기화</button>
+                </div>
+            </div>
+
+            <!-- Instrument Pads -->
+            <div class="grid grid-cols-3 gap-4">
+                <div onclick="playSound(261.63, 'C4', this)" class="instrument-pad h-32 bg-rose-400 dark:bg-rose-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Do</span>
+                    <span class="text-xs opacity-50">C4</span>
+                </div>
+                <div onclick="playSound(293.66, 'D4', this)" class="instrument-pad h-32 bg-orange-400 dark:bg-orange-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Re</span>
+                    <span class="text-xs opacity-50">D4</span>
+                </div>
+                <div onclick="playSound(329.63, 'E4', this)" class="instrument-pad h-32 bg-amber-400 dark:bg-amber-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Mi</span>
+                    <span class="text-xs opacity-50">E4</span>
+                </div>
+                <div onclick="playSound(349.23, 'F4', this)" class="instrument-pad h-32 bg-emerald-400 dark:bg-emerald-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Fa</span>
+                    <span class="text-xs opacity-50">F4</span>
+                </div>
+                <div onclick="playSound(392.00, 'G4', this)" class="instrument-pad h-32 bg-blue-400 dark:bg-blue-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Sol</span>
+                    <span class="text-xs opacity-50">G4</span>
+                </div>
+                <div onclick="playSound(440.00, 'A4', this)" class="instrument-pad h-32 bg-indigo-400 dark:bg-indigo-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>La</span>
+                    <span class="text-xs opacity-50">A4</span>
+                </div>
+                <div onclick="playSound(493.88, 'B4', this)" class="instrument-pad h-32 bg-purple-400 dark:bg-purple-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Ti</span>
+                    <span class="text-xs opacity-50">B4</span>
+                </div>
+                <div onclick="playSound(523.25, 'C5', this)" class="instrument-pad h-32 bg-pink-400 dark:bg-pink-600 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg">
+                    <span>Do</span>
+                    <span class="text-xs opacity-50">C5</span>
+                </div>
+                <div id="ai-auto-btn" onclick="toggleAutoMode()" class="instrument-pad h-32 bg-slate-800 dark:bg-slate-100 dark:text-slate-900 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg ring-4 ring-indigo-500 ring-offset-2 dark:ring-offset-slate-950">
+                    <i class="fas fa-robot mb-1"></i>
+                    <span id="auto-text">AI 자동</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content (Ethics & Tools) -->
+    <main class="max-w-6xl mx-auto px-6 py-20 space-y-32">
+        <section id="ethics" class="scroll-mt-24">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 font-bold text-sm mb-4">Ethics & Value</span>
+                <h2 class="text-4xl font-bold mb-4">인공지능과 창작의 가치</h2>
+            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-slate-900 p-10 rounded-3xl border border-gray-100 dark:border-slate-800 card-hover">
+                    <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">인공지능과 음악의 상호작용</h3>
+                    <p class="text-gray-600 dark:text-slate-400 leading-relaxed">AI는 인간의 창의성을 대체하는 것이 아니라 확장합니다. 실시간 상호작용을 통해 새로운 영감을 얻는 과정을 배웁니다.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 p-10 rounded-3xl border border-gray-100 dark:border-slate-800 card-hover">
+                    <div class="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">학습 데이터의 공정성</h3>
+                    <p class="text-gray-600 dark:text-slate-400 leading-relaxed">AI가 학습하는 데이터에 따라 결과물이 달라집니다. 편향되지 않은 예술적 시각의 중요성을 토론합니다.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 p-10 rounded-3xl border border-gray-100 dark:border-slate-800 card-hover">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 text-blue-500 dark:text-blue-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">예술가의 권리 보호</h3>
+                    <p class="text-gray-600 dark:text-slate-400 leading-relaxed">기술 발전 속에서 인간 예술가의 독창성과 저작권을 어떻게 보호할 수 있을지 고민해봅니다.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 py-16 px-6 text-center">
+        <p class="text-gray-400 dark:text-slate-500 text-sm">© 2024 AI Music Lab for Education. Created for future creators.</p>
+    </footer>
+
+    <script>
+        // Audio Logic
+        let audioCtx;
+        let analyser;
+        let canvas, ctx;
+        let isAutoMode = false;
+        let autoInterval;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+                
+                canvas = document.getElementById('visualizer');
+                ctx = canvas.getContext('2d');
+                resizeCanvas();
+                draw();
+                document.getElementById('start-hint').classList.add('hidden');
+            }
+        }
+
+        function playSound(freq, note, element) {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+            osc.connect(gain);
+            gain.connect(analyser);
+            analyser.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+
+            // Visual effect on pad
+            if(element) {
+                element.classList.add('ring-4', 'ring-white', 'scale-95');
+                setTimeout(() => element.classList.remove('ring-4', 'ring-white', 'scale-95'), 150);
+            }
+        }
+
+        function draw() {
+            requestAnimationFrame(draw);
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                const barHeight = dataArray[i] / 2;
+                const hue = i * 3;
+                ctx.fillStyle = `hsla(${hue + 200}, 80%, 60%, 0.8)`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        function resizeCanvas() {
+            if(canvas) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+        }
+
+        function toggleAutoMode() {
+            isAutoMode = !isAutoMode;
+            const btn = document.getElementById('ai-auto-btn');
+            const txt = document.getElementById('auto-text');
+            
+            if(isAutoMode) {
+                btn.classList.add('animate-pulse-slow', 'bg-indigo-600');
+                txt.innerText = "중지";
+                autoInterval = setInterval(() => {
+                    const freqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+                    const randomFreq = freqs[Math.floor(Math.random() * freqs.length)];
+                    playSound(randomFreq);
+                }, 400);
+            } else {
+                btn.classList.remove('animate-pulse-slow', 'bg-indigo-600');
+                txt.innerText = "AI 자동";
+                clearInterval(autoInterval);
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                themeToggleDarkIcon.classList.add('hidden');
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleLightIcon.classList.add('hidden');
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+        }
+        updateIcons();
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateIcons();
+        });
+    </script>
+</body>
+</html>
