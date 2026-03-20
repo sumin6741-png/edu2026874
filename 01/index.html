@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학교폭력 집단별 특성 분석 및 개입 전략</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .group-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+        .progress-bar { transition: width 1s ease-in-out; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-indigo-600 text-white shadow-lg">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- 홈 버튼 -->
+            <a href="../index.html/" class="flex items-center gap-2 hover:bg-indigo-500 px-4 py-2 rounded-lg transition font-medium">
+                <i class="fas fa-home"></i> 홈
+            </a>
+            <div class="text-xs opacity-75 hidden md:block">학교폭력 예방 교육 시스템 v1.0</div>
+        </div>
+        <div class="py-8 px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">학교폭력: 집단별 심리사회적 특성 이해</h1>
+            <p class="text-indigo-100 max-w-2xl mx-auto">가해, 피해, 그리고 그 경계에 있는 '가해-피해' 집단까지. 우리 교실의 아이들을 더 깊이 이해하기 위한 가이드입니다.</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto py-10 px-6">
+        
+        <!-- 시작하기 영역 -->
+        <section class="bg-white rounded-2xl shadow-md p-8 mb-10 text-center border-2 border-indigo-100">
+            <h2 class="text-2xl font-bold mb-4 text-indigo-800">시작하기</h2>
+            <p class="text-slate-600 mb-6">수업을 시작하기 전, 핵심 인포그래픽 자료를 먼저 확인해 보세요.</p>
+            <button onclick="toggleInfographicImage()" class="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition shadow-lg flex items-center justify-center mx-auto gap-2">
+                <i class="fas fa-image"></i> 인포그래픽 보기
+            </button>
+            
+            <div id="infographic-image-area" class="hidden mt-8 transition-all duration-500 overflow-hidden">
+                <div class="relative inline-block border-4 border-slate-100 rounded-xl overflow-hidden shadow-inner bg-slate-50 p-2">
+                    <img src="04.png" alt="학교폭력 인포그래픽" class="max-w-full h-auto rounded-lg mx-auto" onerror="this.src='https://via.placeholder.com/800x450?text=04.png+자료를+찾을+수+없습니다'">
+                    <p class="mt-2 text-sm text-slate-400">학습 참고 자료: 04.png</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 mb-10">
+            <button onclick="showTab('infographic')" class="tab-btn px-6 py-2 rounded-full bg-indigo-600 text-white font-medium" id="btn-infographic">특성 인포그래픽</button>
+            <button onclick="showTab('strategy')" class="tab-btn px-6 py-2 rounded-full bg-white text-indigo-600 border border-indigo-600 font-medium" id="btn-strategy">맞춤형 개입 전략</button>
+            <button onclick="showTab('quiz')" class="tab-btn px-6 py-2 rounded-full bg-white text-indigo-600 border border-indigo-600 font-medium" id="btn-quiz">학습 확인 퀴즈</button>
+        </div>
+
+        <!-- 1. Infographic Section -->
+        <section id="infographic" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- 가해-피해 집단 -->
+                <div class="group-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-rose-500">
+                    <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-sync-alt"></i></div>
+                    <h3 class="text-xl font-bold mb-2">가해-피해 집단</h3>
+                    <p class="text-sm text-slate-600 mb-4">"가장 복합적이고 위험한 집단"</p>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>선제적 공격성</span><span class="font-bold">매우 높음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-rose-500 h-2 rounded-full w-[95%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>반응적 공격성</span><span class="font-bold">매우 높음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-rose-500 h-2 rounded-full w-[90%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>정서 억제력</span><span class="font-bold">낮음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-slate-300 h-2 rounded-full w-[30%]"></div></div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500 bg-rose-50 p-2 rounded italic font-medium">
+                        "행동 문제가 가시적이어서 교사의 지지를 가장 많이 받는 역설적 특징을 보입니다."
+                    </p>
+                </div>
+
+                <!-- 순수 가해 집단 -->
+                <div class="group-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
+                    <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-fist-raised"></i></div>
+                    <h3 class="text-xl font-bold mb-2">순수 가해 집단</h3>
+                    <p class="text-sm text-slate-600 mb-4">"도구적 공격성 활용자"</p>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>선제적 공격성</span><span class="font-bold">높음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-amber-500 h-2 rounded-full w-[80%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>도움 추구 전략</span><span class="font-bold">낮음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-slate-300 h-2 rounded-full w-[25%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>상황 거리두기</span><span class="font-bold">높음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-amber-500 h-2 rounded-full w-[75%]"></div></div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500 bg-amber-50 p-2 rounded italic font-medium">
+                        "어른에게 도움을 구하기보다 스스로 공격적인 해결 방식을 택하는 경향이 있습니다."
+                    </p>
+                </div>
+
+                <!-- 순수 피해 집단 -->
+                <div class="group-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500">
+                    <div class="text-indigo-500 text-4xl mb-4"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="text-xl font-bold mb-2">순수 피해 집단</h3>
+                    <p class="text-sm text-slate-600 mb-4">"비가시적 고립 집단"</p>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>내면화 전략</span><span class="font-bold">매우 높음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-indigo-500 h-2 rounded-full w-[90%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>학교 유대감</span><span class="font-bold">매우 낮음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-slate-300 h-2 rounded-full w-[20%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1"><span>친구 지지</span><span class="font-bold">매우 낮음</span></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-slate-300 h-2 rounded-full w-[15%]"></div></div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500 bg-indigo-50 p-2 rounded italic font-medium">
+                        "문제 행동이 겉으로 드러나지 않아 교사의 관심 밖으로 밀려날 위험이 큽니다."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Strategy Section -->
+        <section id="strategy" class="tab-content">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold mb-6 text-indigo-700 underline decoration-indigo-200">집단별 맞춤형 개입 전략 가이드</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex gap-4 items-start p-4 bg-slate-50 rounded-xl">
+                        <div class="bg-rose-100 text-rose-600 p-3 rounded-lg"><i class="fas fa-hand-holding-heart fa-lg"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">가해-피해 집단: 자기통제력 강화</h4>
+                            <p class="text-slate-600 text-sm mt-1">이들은 '분노'를 조절하는 법을 배워야 합니다. <strong>공격성 치환 훈련(ART)</strong>이 효과적이며, 교사와의 <strong>'행동 계약'</strong>을 통해 긍정적인 행동을 즉각 강화해주는 것이 핵심입니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start p-4 bg-slate-50 rounded-xl">
+                        <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg"><i class="fas fa-user-friends fa-lg"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">순수 피해 집단: 사회적 완충지대 구축</h4>
+                            <p class="text-slate-600 text-sm mt-1">심리적 위축을 해소하는 것이 급선무입니다. 사회적 기술 교육에 앞서 <strong>또래 멘토링</strong>이나 <strong>학급 내 지지망</strong>을 형성해주어 학생이 혼자가 아니라는 확신을 주어야 합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start p-4 bg-slate-50 rounded-xl">
+                        <div class="bg-amber-100 text-amber-600 p-3 rounded-lg"><i class="fas fa-balance-scale fa-lg"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">순수 가해 집단: 공감과 도덕성 함양</h4>
+                            <p class="text-slate-600 text-sm mt-1">자신의 가해 행위가 타인에게 어떤 고통을 주는지에 대한 <strong>공감 훈련</strong>이 필요합니다. 또한, 이들의 에너지를 긍정적인 리더십으로 전환할 수 있는 과업을 부여해보세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Quiz Section -->
+        <section id="quiz" class="tab-content">
+            <div id="quiz-container" class="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <div id="quiz-question-box">
+                    <span class="text-indigo-600 font-bold mb-2 block">문제 <span id="q-num">1</span>/3</span>
+                    <h2 id="q-text" class="text-xl md:text-2xl font-bold mb-8">가해-피해 집단이 순수 피해 집단보다 교사의 지지를 더 많이 받는 주된 원인은 무엇인가요?</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="q-options">
+                        <!-- Options generated by JS -->
+                    </div>
+                </div>
+                
+                <div id="quiz-result" class="hidden">
+                    <div class="text-6xl text-green-500 mb-4"><i class="fas fa-check-circle"></i></div>
+                    <h2 class="text-2xl font-bold mb-2">학습 완료!</h2>
+                    <p class="text-slate-600 mb-6">학교폭력 집단의 복합적인 특성을 완벽히 이해하셨습니다.</p>
+                    <button onclick="resetQuiz()" class="bg-indigo-600 text-white px-8 py-2 rounded-full hover:bg-indigo-700 transition">다시 풀기</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-8 text-center text-sm">
+        <p>© 2024 학교폭력 예방 교육 인터랙티브 자료</p>
+        <p class="mt-2 italic">이 자료는 이승연 외(2014)의 연구 결과를 바탕으로 제작되었습니다.</p>
+    </footer>
+
+    <script>
+        // Tab System
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-white', 'text-indigo-600');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('bg-white', 'text-indigo-600');
+            activeBtn.classList.add('bg-indigo-600', 'text-white');
+        }
+
+        // Toggle Infographic Image
+        function toggleInfographicImage() {
+            const area = document.getElementById('infographic-image-area');
+            if (area.classList.contains('hidden')) {
+                area.classList.remove('hidden');
+                area.style.animation = 'fadeIn 0.5s ease-out';
+            } else {
+                area.classList.add('hidden');
+            }
+        }
+
+        // Simple Quiz System
+        const quizData = [
+            {
+                q: "가해-피해 집단이 순수 피해 집단보다 교사의 지지를 더 많이 받는 주된 원인은?",
+                options: ["성적이 우수해서", "행동 문제가 가시적이어서", "친화력이 좋아서", "운동을 잘해서"],
+                correct: 1,
+                hint: "선생님 눈에 더 잘 띄는 집단이 누구인지 생각해보세요."
+            },
+            {
+                q: "가해-피해 집단이 보인 역설적 특징 중 하나로, 이들이 예측되는 주요 요인은?",
+                options: ["높은 공감 능력", "높은 문제 해결력", "높은 선제적 공격성", "높은 학교 유대감"],
+                correct: 2,
+                hint: "타인을 도구적으로 괴롭히려는 성향이 강합니다."
+            },
+            {
+                q: "순수 피해 집단의 고립을 막기 위해 가장 효과적인 '보호 요인'은 무엇인가요?",
+                options: ["강한 처벌", "친구들의 지지", "새로운 학용품", "집에서 공부하기"],
+                correct: 1,
+                hint: "사회적 완충지대가 되어주는 또래들이 필요합니다."
+            }
+        ];
+
+        let currentQ = 0;
+
+        function loadQuiz() {
+            const q = quizData[currentQ];
+            document.getElementById('q-num').innerText = currentQ + 1;
+            document.getElementById('q-text').innerText = q.q;
+            
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 border-2 border-slate-100 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 transition text-left font-medium";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            const q = quizData[currentQ];
+            if (idx === q.correct) {
+                if (currentQ < quizData.length - 1) {
+                    currentQ++;
+                    loadQuiz();
+                } else {
+                    document.getElementById('quiz-question-box').classList.add('hidden');
+                    document.getElementById('quiz-result').classList.remove('hidden');
+                }
+            } else {
+                alert("다시 한 번 생각해보세요! \n힌트: " + q.hint);
+            }
+        }
+
+        function resetQuiz() {
+            currentQ = 0;
+            document.getElementById('quiz-question-box').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            loadQuiz();
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>
